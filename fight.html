@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>싸움 게임 - HP바 추가</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fefefe;
+      text-align: center;
+      padding: 30px;
+    }
+    .character {
+      margin: 30px;
+    }
+    .hp {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 5px;
+    }
+    .hp-bar {
+      width: 200px;
+      height: 20px;
+      border: 1px solid #333;
+      margin: 0 auto 20px;
+      background-color: #eee;
+      position: relative;
+    }
+    .hp-fill {
+      height: 100%;
+      background-color: #4CAF50;
+      width: 100%;
+      transition: width 0.3s ease;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .log {
+      margin-top: 30px;
+      background-color: #eee;
+      padding: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⚔️ 김준연과 허민재의 싸움 ⚔️</h1>
+
+  <div class="character" id="player">
+    <h2>🧝‍♂️ 김준연</h2>
+    <p class="hp" id="playerHp">HP: 100</p>
+    <div class="hp-bar"><div class="hp-fill" id="playerHpBar"></div></div>
+  </div>
+
+  <div class="character" id="enemy">
+    <h2>👹 허민재</h2>
+    <p class="hp" id="enemyHp">HP: 100</p>
+    <div class="hp-bar"><div class="hp-fill" id="enemyHpBar"></div></div>
+  </div>
+
+  <button onclick="attack()">공격!</button>
+
+  <div class="log" id="log"></div>
+  
+  <img id="victoryImage" src="minjewin.png" alt="승리!" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%); width: 300px; z-index: 999;">
+  <script>
+    let playerHp = 100;
+    let enemyHp = 100;
+    let turn = "player"; // 'player' or 'enemy'
+
+    function updateHpDisplay() {
+      document.getElementById("playerHp").textContent = `HP: ${playerHp}`;
+      document.getElementById("enemyHp").textContent = `HP: ${enemyHp}`;
+      document.getElementById("playerHpBar").style.width = `${playerHp}%`;
+      document.getElementById("enemyHpBar").style.width = `${enemyHp}%`;
+    }
+
+    function attack() {
+      if (playerHp <= 0 || enemyHp <= 0) return;
+
+      const logDiv = document.getElementById("log");
+      let damage = Math.floor(Math.random() * 20) + 5; // 5~24
+
+      if (turn === "player") {
+        enemyHp -= damage/2;
+        enemyHp = Math.max(0, enemyHp);
+        logDiv.innerHTML += `<p>🧝‍♂️ 김준연이 👹 허민재에게 ${damage/2} 데미지!</p>`;
+        turn = "enemy";
+      } else {
+        playerHp -= damage;
+        playerHp = Math.max(0, playerHp);
+        logDiv.innerHTML += `<p>👹 허민재가 🧝‍♂️ 김준연에게 ${damage} 데미지!</p>`;
+        turn = "player";
+      }
+
+      updateHpDisplay();
+
+      if (playerHp <= 0) {
+        logDiv.innerHTML += `<p>💀 김준연 패배!</p>`;
+        document.getElementById("victoryImage").style.display = "block";
+      } else if (enemyHp <= 0) {
+        logDiv.innerHTML += `<p>🎉 김준연이 허민재를 이겼다!</p>`;
+        document.getElementById("victoryImage").style.display = "none";
+      }
+
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    updateHpDisplay(); // 초기 상태 표시
+  </script>
+
+</body>
+</html>
