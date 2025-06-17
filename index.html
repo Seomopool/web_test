@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="허민제와 김준연의 싸움 프로그램!">
+  <meta name="author" content="케빈">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>김준연, 그의 처절한 복수</title>
+  <style>
+    body {
+      background-image: url("background.png"); /* 이미지 경로 */
+      background-size: cover;        /* 화면에 꽉 차게 */
+      background-repeat: no-repeat;  /* 반복 안 함 */
+      background-position: center;   /* 가운데 정렬 */
+    }
+
+    #likeBtn {
+      font-size: 20px;
+      padding: 20px 25px;
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .highlight { background-color: yellow; font-weight: bold; }
+    .shake {
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    #bar {
+      background: lightgray;
+      width: 300px;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #bar-inner {
+      background: linear-gradient(to right, green, red);
+      height: 100%;
+      width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>김준연 VS 허민재</h1>
+  <p><span style="color: rgb(255, 0, 225);" class ="highlight">허민재(19,남성) vs 김준연(20,남성)</span> 시온고 세기의 대결을 체험하다</p>
+
+  <a href="https://namu.wiki/w/%EA%B9%80%EC%A4%80%ED%98%84" target="_blank">김준연 프로필 바로가기</a><br>
+  <a href="https://namu.wiki/w/%ED%97%88%EB%AF%BC(%EC%A7%91%EC%A3%BC%EC%9D%B8%20%EB%94%B8%EB%82%B4%EB%AF%B8)" target="_blank">허민재 프로필 바로가기</a>
+
+  <br><br>
+  <img src="fight.png" alt="샘플 이미지" width="300">
+  <br><br>
+
+  <h2>싸움 종목</h2>
+  <ol>
+    <li><a href="armfight.html">팔씨름</a></li>
+    <li><a href="boxing.html">복싱</a></li>
+    <li><a href="yacha.html">야차룰</a></li>
+
+  </ol>
+
+  <br>
+  <div style="border: 5px solid rgb(183, 25, 204); padding: 10px;background-color: rgb(225, 152, 252)">
+    <h1>누가 이길 것 같나요? 투표 클릭!</h1>
+    <button id="btn-minjae" class="likeBtn">👍 허민재 <span id="count-minjae">0</span></button>
+    <button id="btn-junyeon" class="likeBtn">👍 김준연 <span id="count-junyeon">0</span></button>
+    <p id="reaction" style="font-weight: bold; margin-top: 10px;">팽팽한 싸움!</p>
+    
+    <p>실시간 투표 상황:</p>
+    <div id="bar">
+      <div id="bar-inner"></div>
+    </div>
+  </div>
+
+  <br>
+  <p><b>김준연:</b> 나의 오랜 꿈은 <span class="highlight">"언젠가 허민제를 이기는 것"</span>이다.</p>
+  <br>
+<!-- input 태그 -->
+  <h2>이의제기</h2>
+  이름: <input type="text" id="input_name" placeholder="이름을 입력하세요"><br><br>
+  나이: <input type="number" id="input_age" placeholder="나이를 입력하세요"><br><br>
+  사유: <input type="text" id="input_reason" placeholder="이의제기 사유를 입력하세요"><br><br>
+
+  <!-- button 태그 -->
+  <button onclick="validateForm()">제출하기</button>
+
+  <!-- 사운드 효과 (원할 경우) -->
+  <audio id="punchSound" src="punch.mp3"></audio>
+
+<!-- 이 부분은 body 끝나기 전에 들어가야 함 -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let countMinjae = 0;
+    let countJunyeon = 0;
+
+    document.getElementById("btn-minjae").addEventListener("click", function () {
+      countMinjae++;
+      document.getElementById("count-minjae").innerText = countMinjae;
+      updateBar();
+      document.getElementById("reaction").innerText = "허민재의 강펀치!";
+    });
+
+    document.getElementById("btn-junyeon").addEventListener("click", function () {
+      if (countJunyeon>4){
+        document.getElementById("count-junyeon").innerText = countJunyeon;
+        updateBar();
+        document.getElementById("reaction").innerText = "김준연의 공격 실패!";
+      }
+      else{
+        countJunyeon++;
+        document.getElementById("count-junyeon").innerText = countJunyeon;
+        updateBar();
+        document.getElementById("reaction").innerText = "김준연의 냥냥펀치!";
+      }
+    });
+
+    function updateBar() {
+      const total = countMinjae + countJunyeon;
+      if (total === 0) return;
+      const percentMinjae = (countMinjae / total) * 100;
+      document.getElementById("bar-inner").style.width = percentMinjae + "%";
+    }
+
+    window.validateForm = function () {
+      const name = document.getElementById("input_name").value.trim();
+      const age = document.getElementById("input_age").value.trim();
+      const reason = document.getElementById("input_reason").value.trim();
+
+      if (!name || !age || !reason) {
+        alert("이름, 나이, 사유를 모두 입력해주세요!");
+      } else {
+        alert("ㄷㅊㅋㅋ");
+        document.getElementById("punchSound").play();
+        input_name.value ="";
+        input_age.value ="";
+        input_reason.value="";
+      }
+    };
+  });
+</script>
+
+</body>
