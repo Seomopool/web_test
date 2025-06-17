@@ -94,8 +94,7 @@
   <!-- button 태그 -->
   <button onclick="validateForm()">제출하기</button>
 
-  <!-- 사운드 효과 (원할 경우) -->
-  <audio id="punchSound" src="punch.mp3"></audio>
+
 
 <!-- 이 부분은 body 끝나기 전에 들어가야 함 -->
 <script>
@@ -111,17 +110,11 @@
     });
 
     document.getElementById("btn-junyeon").addEventListener("click", function () {
-      if (countJunyeon>4){
-        document.getElementById("count-junyeon").innerText = countJunyeon;
-        updateBar();
-        document.getElementById("reaction").innerText = "김준연의 공격 실패!";
-      }
-      else{
         countJunyeon++;
         document.getElementById("count-junyeon").innerText = countJunyeon;
         updateBar();
         document.getElementById("reaction").innerText = "김준연의 냥냥펀치!";
-      }
+      
     });
 
     function updateBar() {
