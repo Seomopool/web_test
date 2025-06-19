@@ -1,76 +1,78 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <style>
-            body {
-            background-image: url("background.png"); /* 이미지 경로 */
-            background-size: cover;        /* 화면에 꽉 차게 */
-            background-repeat: no-repeat;  /* 반복 안 함 */
-            background-position: center;   /* 가운데 정렬 */
-            }
-            #junyeon {
-                position : absolute;
-                left : 75px;
-                top : 100px;
-                width : 50px;
-                height : 100px;
-                background-color: blue;
-            }
-            #minje {
-                position : absolute;
-                position : absolute;
-                left : 175px;
-                top : 100px;
-                width : 50px;
-                height : 100px;
-                background-color: rgb(255, 0, 0);
-            }
-            #leftBtn {
-                position : absolute;
-                left : 20px;
-                top: 230px;
-            }
-            #rightBtn {
-                position : absolute;
-                left : 100px;
-                top: 230px;
-            }
-            .moveRight {
-                animation: moveRight 0.5s forwards;
-            }           
-            @keyframes moveRight {
-                0% {transform : translateX(0);}
-                50% {transform : translateX(100px);}
-                100% {transform : translateX(0px);}
-            }
-            .moveLeft {
-                animation: moveLeft 0.5s forwards;
-            }           
-            @keyframes moveLeft {
-                0% {transform : translateX(0);}
-                100% {transform : translateX(-100px);}
-            }
-        </style>
-    </head>
-    <body>
-        <div id="junyeon"></div>
-        <div id="minje"></div>
-        <button id="leftBtn">←</button>
-        <button id="rightBtn">→</button>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-        <script>
-            const junyeon = document.getElementById("junyeon");
-            let posX = 0;
+      body {
+        margin: 0;
+        background-image: url("background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
 
-            document.getElementById("leftBtn").addEventListener("click", () => {
-                posX -= 20;
-                junyeon.style.transform = `translateX(${posX}px)`;
-            });
+      #junyeon,
+      #minje {
+        position: absolute;
+        width: 10vw;
+        height: 20vh;
+      }
 
-            document.getElementById("rightBtn").addEventListener("click", () => {
-                posX += 20;
-                junyeon.style.transform = `translateX(${posX}px)`;
-            });
-        </script>
-    </body>
+      #junyeon {
+        left: 15vw;
+        top: 40vh;
+        background-color: blue;
+      }
+
+      #minje {
+        left: 40vw;
+        top: 40vh;
+        background-color: red;
+      }
+
+      button {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        position: absolute;
+        bottom: 10vh;
+      }
+
+      #leftBtn {
+        left: 10vw;
+      }
+
+      #rightBtn {
+        left: 30vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="junyeon"></div>
+    <div id="minje"></div>
+    <button id="leftBtn">←</button>
+    <button id="rightBtn">→</button>
+
+    <script>
+      const junyeon = document.getElementById("junyeon");
+      let posX = 15; // vw 기준 위치
+
+      document.getElementById("leftBtn").addEventListener("click", () => {
+        posX -= 5;
+        junyeon.style.left = posX + "vw";
+      });
+
+      document.getElementById("rightBtn").addEventListener("click", () => {
+        posX += 5;
+        junyeon.style.left = posX + "vw";
+      });
+    </script>
+  </body>
 </html>
