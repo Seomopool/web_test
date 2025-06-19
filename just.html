@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #junyeon {
+                position : absolute;
+                left : 75px;
+                top : 100px;
+                width : 50px;
+                height : 100px;
+                background-color: blue;
+            }
+            #minje {
+                position : absolute;
+                position : absolute;
+                left : 175px;
+                top : 100px;
+                width : 50px;
+                height : 100px;
+                background-color: rgb(255, 0, 0);
+            }
+            #leftBtn {
+                position : absolute;
+                left : 20px;
+                top: 230px;
+            }
+            #rightBtn {
+                position : absolute;
+                left : 100px;
+                top: 230px;
+            }
+            .moveRight {
+                animation: moveRight 0.5s forwards;
+            }           
+            @keyframes moveRight {
+                0% {transform : translateX(0);}
+                50% {transform : translateX(100px);}
+                100% {transform : translateX(0px);}
+            }
+            .moveLeft {
+                animation: moveLeft 0.5s forwards;
+            }           
+            @keyframes moveLeft {
+                0% {transform : translateX(0);}
+                100% {transform : translateX(-100px);}
+            }
+        </style>
+    </head>
+    <body>
+        <div id="junyeon"></div>
+        <div id="minje"></div>
+        <button id="leftBtn">←</button>
+        <button id="rightBtn">→</button>
+
+        <script>
+            const junyeon = document.getElementById("junyeon");
+            let posX = 0;
+
+            document.getElementById("leftBtn").addEventListener("click", () => {
+                posX -= 20;
+                junyeon.style.transform = `translateX(${posX}px)`;
+            });
+
+            document.getElementById("rightBtn").addEventListener("click", () => {
+                posX += 20;
+                junyeon.style.transform = `translateX(${posX}px)`;
+            });
+        </script>
+    </body>
+</html>
