@@ -10,7 +10,7 @@
 
       body {
         margin: 0;
-        background-image: url("background.png");
+        background-image: url("fightground.png");
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -19,24 +19,24 @@
         overflow: hidden;
       }
 
-      #junyeon,
       #minje {
         position: absolute;
-        width: 10vw;
-        height: 20vh;
+        width: 13w;
+        height: 23vh;
+        left: 70vw;
+        top: 40vh;
+        transform: scaleX(-1); /* ← 좌우 반전 */
       }
 
       #junyeon {
-        left: 15vw;
+        position: absolute;
+        width: 13vw;
+        height: 23vh;
+        left: 20vw;
         top: 40vh;
-        background-color: blue;
+
       }
 
-      #minje {
-        left: 40vw;
-        top: 40vh;
-        background-color: red;
-      }
 
       button {
         font-size: 1.2rem;
@@ -44,35 +44,234 @@
         position: absolute;
         bottom: 10vh;
       }
-
+      
       #leftBtn {
         left: 10vw;
       }
 
       #rightBtn {
-        left: 30vw;
+        left: 60vw;
       }
+      #gameMessage {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        font-weight: bold;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px 40px;
+        border-radius: 15px;
+        display: none; /* 처음에는 숨김 */
+        z-index: 9999;
+        text-align: center;
+      }
+
+    button {
+    font-size: 2rem;          /* 글자 크기 크게 */
+    padding: 20px 30px;       /* 버튼 크기 여유 있게 */
+    width: 30vw;              /* 너비를 화면 비율로 */
+    height: 10vh;             /* 높이도 고정 */
+    border-radius: 12px;      /* 둥근 버튼 */
+    border: none;
+    background-color: #444;   /* 버튼 색상 */
+    color: white;
+    position: absolute;
+    bottom: 5vh;
+    }
+    #hpContainer {
+    position: absolute;
+    top: 2vh;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+    }
+
+    .hpWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+    color: white;
+    text-shadow: 1px 1px 3px black;
+    }
+
+    .hpBarBg {
+    width: 30vw;
+    height: 20px;
+    background-color: #ccc;
+    border: 2px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+    }
+
+    .hpBarFill {
+    height: 100%;
+    width: 100%;
+    background-color: #4caf50;
+    transition: width 0.3s;
+    }
+  .fireball {
+    position: absolute;
+    width: 40px; /* 필요에 따라 크기 조정 가능 */
+    height: 40px;
+    background-image: url('punch.png'); /* 👈 이미지 파일 경로 */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 50;
+    transition: left 0.3s linear;
+    transform: rotate(-70deg);
+    filter: brightness(0.7) saturate(1.2) sepia(0.4);
+  }
+
     </style>
   </head>
   <body>
-    <div id="junyeon"></div>
-    <div id="minje"></div>
+    <img id="junyeon" src="Fightjunyeon.png" />
+    <img id="minje" src="Fightminje.png" />
+
     <button id="leftBtn">←</button>
     <button id="rightBtn">→</button>
+    <div id="hpContainer">
+    <div class="hpWrapper">
+        <span>준연 HP</span>
+        <div class="hpBarBg">
+        <div id="junyeonHpBar" class="hpBarFill"></div>
+        </div>
+    </div>
+    <div class="hpWrapper">
+        <span>민재 HP</span>
+        <div class="hpBarBg">
+        <div id="minjeHpBar" class="hpBarFill"></div>
+        </div>
+    </div>
+    </div>
+  <div id="gameMessage"></div>
 
-    <script>
-      const junyeon = document.getElementById("junyeon");
-      let posX = 15; // vw 기준 위치
+<script>
+  const junyeon = document.getElementById("junyeon");
+  const minje = document.getElementById("minje");
 
-      document.getElementById("leftBtn").addEventListener("click", () => {
-        posX -= 5;
-        junyeon.style.left = posX + "vw";
-      });
+  let posX = 15; // vw 기준 위치
+  let minjeHp = 100;
+  let junyeonHP = 100;
 
-      document.getElementById("rightBtn").addEventListener("click", () => {
-        posX += 5;
-        junyeon.style.left = posX + "vw";
-      });
-    </script>
+  // 체력바 업데이트 함수
+  function updateHpBars() {
+    document.getElementById("minjeHpBar").style.width = minjeHp + "%";
+    document.getElementById("junyeonHpBar").style.width = junyeonHP + "%";
+
+    if (minjeHp <= 0) {
+      minje.style.opacity = 0.3;
+      showGameMessage("🎉 준연 승리!");
+      // fireball 정지: clearInterval(...)
+    }
+
+    if (junyeonHP <= 0) {
+      junyeon.style.opacity = 0.3;
+      showGameMessage("💀 민재 승리!");
+      // 버튼 비활성화 등
+    }
+  }
+  function showGameMessage(text) {
+  const msg = document.getElementById("gameMessage");
+  msg.textContent = text;
+  msg.style.display = "block";
+  }
+
+
+  // 충돌 판정 함수
+  function isColliding(el1, el2) {
+    const rect1 = el1.getBoundingClientRect();
+    const rect2 = el2.getBoundingClientRect();
+    return !(
+      rect1.right < rect2.left ||
+      rect1.left > rect2.right ||
+      rect1.bottom < rect2.top ||
+      rect1.top > rect2.bottom
+    );
+  }
+
+  // 충돌 시 데미지
+  function checkCollisionAndDamage() {
+    if (isColliding(junyeon, minje)) {
+      minjeHp -= 5;
+      if (minjeHp < 0) minjeHp = 0;
+      updateHpBars();
+    }
+  }
+
+
+  // 이동 버튼 처리
+  document.getElementById("leftBtn").addEventListener("click", () => {
+    if (junyeonHP <= 0) return; // ❌ 체력이 0이면 무시
+    posX -= 5;
+    junyeon.style.left = posX + "vw";
+    checkCollisionAndDamage();
+  });
+
+  document.getElementById("rightBtn").addEventListener("click", () => {
+    if (junyeonHP <= 0) return; // ❌ 체력이 0이면 무시
+    posX += 5;
+    junyeon.style.left = posX + "vw";
+    checkCollisionAndDamage();
+  });
+
+  
+  // 페이지 시작 시 HP바 초기화
+  updateHpBars();
+
+    function shootFireball() {
+    if (minjeHp <= 0) return;
+
+    const fireball = document.createElement("div");
+    fireball.classList.add("fireball");
+
+    // 민재 위치에서 발사
+    const startX = minje.offsetLeft + 40; // 민재 오른쪽 끝
+    const startY = minje.offsetTop + 40;  // 중간 높이
+
+    fireball.style.left = startX + "px";
+    fireball.style.top = startY + "px";
+    document.body.appendChild(fireball);
+    
+    let currentX = startX;
+    const speed = -10; // 왼쪽으로 움직이기 (음수)
+
+    // 짧은 사정거리로 이동
+    const moveInterval = setInterval(() => {
+      currentX += speed;
+      fireball.style.left = currentX + "px";
+
+    // 충돌 감지
+      if (isColliding(fireball, junyeon)) {
+        junyeonHP -= 10;
+        if (junyeonHP < 0) junyeonHP = 0;
+        updateHpBars();
+        fireball.remove();
+        clearInterval(moveInterval);
+      }
+
+      // 화면 밖으로 나가면 제거
+      if (currentX < 0) {
+        fireball.remove();
+        clearInterval(moveInterval);
+      }
+    }, 30);
+
+  }
+
+    // 1초마다 자동 발사
+
+    setInterval(shootFireball, 500);
+
+</script>
+
   </body>
 </html>
